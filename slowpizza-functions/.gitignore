@@ -67,3 +67,20 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+
+# Build e cache
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Arquivos de credenciais
+*.json
+firebase_options.dart
