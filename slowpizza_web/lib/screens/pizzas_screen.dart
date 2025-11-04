@@ -19,14 +19,44 @@ class _PizzasScreenState extends State<PizzasScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pizzas'),
+        title: const Text('Manutenção de Pizzas'),
+        centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showPizzaForm(context),
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('pizzas').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) return const SizedBox();
+              if (!snapshot.hasData) {
+                return const Padding(
+                  padding: EdgeInsets.only(right: 20),
+                  child: Center(
+                    child: SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                );
+              }
+
+              final total = snapshot.data!.docs.length;
+
+              return Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Chip(
+                  label: Text(
+                    '$total',
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  backgroundColor: Colors.deepOrange,
+                ),
+              );
+            },
           ),
         ],
       ),
+
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('pizzas').snapshots(),
         builder: (context, snapshot) {
@@ -75,6 +105,13 @@ class _PizzasScreenState extends State<PizzasScreen> {
           );
         },
       ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showPizzaForm(context),
+        backgroundColor: Colors.deepOrange,
+        child: const Icon(Icons.add, size: 30),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -114,13 +151,30 @@ class _PizzasScreenState extends State<PizzasScreen> {
                       }
                     },
                     child: _imagemSelecionada != null
-                        ? Image.memory(_imagemSelecionada!, height: 120)
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.memory(
+                              _imagemSelecionada!,
+                              height: 160,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          )
                         : (imagemUrl != null && imagemUrl.isNotEmpty)
-                            ? Image.network(imagemUrl, height: 120)
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  imagemUrl,
+                                  height: 160,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
                             : Container(
-                                height: 120,
+                                height: 160,
+                                width: double.infinity,
                                 color: Colors.grey[200],
-                                child: const Icon(Icons.add_a_photo),
+                                child: const Icon(Icons.add_a_photo, size: 40),
                               ),
                   ),
                   const SizedBox(height: 10),
@@ -148,12 +202,13 @@ class _PizzasScreenState extends State<PizzasScreen> {
                 onPressed: () => Navigator.pop(context),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange),
                 child: const Text('Salvar'),
                 onPressed: () async {
                   try {
                     String? url = imagemUrl;
 
-                    // Upload da imagem (caso nova selecionada)
                     if (_imagemSelecionada != null) {
                       final ref = FirebaseStorage.instance
                           .ref()
@@ -199,7 +254,6 @@ class _PizzasScreenState extends State<PizzasScreen> {
       },
     );
 
-    // limpa imagem após uso
     _imagemSelecionada = null;
     _imagemNome = null;
   }
@@ -226,46 +280,48 @@ class PizzaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 3,
+      elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: imagemUrl.isNotEmpty
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(imagemUrl,
-                          fit: BoxFit.cover, width: double.infinity),
-                    )
-                  : Container(
-                      decoration: BoxDecoration(
+            AspectRatio(
+              aspectRatio: 4 / 3,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: imagemUrl.isNotEmpty
+                    ? Image.network(imagemUrl, fit: BoxFit.cover)
+                    : Container(
                         color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8),
+                        child: const Center(
+                          child: Icon(Icons.local_pizza, size: 40),
+                        ),
                       ),
-                      child: const Center(
-                        child: Icon(Icons.local_pizza, size: 40),
-                      ),
-                    ),
+              ),
             ),
             const SizedBox(height: 8),
-            Text(nome,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(
+              nome,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: 16),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
             Text(
               descricao,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 12),
             ),
-            const SizedBox(height: 4),
+            const Spacer(),
             Text(
               'R\$ ${preco.toStringAsFixed(2)}',
               style: const TextStyle(
                   color: Colors.deepOrange, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
