@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "460195914488",
+    "project_id": "slowpizza-e4bc3",
+    "storage_bucket": "slowpizza-e4bc3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460195914488:android:699020e201e810d0cd910d",
+        "android_client_info": {
+          "package_name": "com.example.slowpizza_web"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCSxHFlhnhLW_bxGobOiseXoROr5QErvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
