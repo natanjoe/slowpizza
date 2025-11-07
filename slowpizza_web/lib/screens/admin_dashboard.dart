@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:slowpizza_web/screens/mesas_screen.dart';
 import '../widgets/menu_tile.dart';
 import '../theme/app_colors.dart';
 import '../screens/pizzas_screen.dart';
@@ -75,6 +76,16 @@ class AdminDashboard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const FinanceiroScreen()),
+                );
+              },
+            ),
+            MenuTile(
+              icon: Icons.attach_money,
+              label: "Mesas",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const MesasScreen()),
                 );
               },
             ),
