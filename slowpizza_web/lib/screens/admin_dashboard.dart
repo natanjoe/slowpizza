@@ -3,6 +3,7 @@ import 'package:slowpizza_web/screens/mesas_screen.dart';
 import '../widgets/menu_tile.dart';
 import '../theme/app_colors.dart';
 import '../screens/pizzas_screen.dart';
+import '../screens/painel_pedidos_screen.dart';
 import '../screens/pedidos_screen.dart';
 import '../screens/clientes_screen.dart';
 import '../screens/financeiro_screen.dart';
@@ -51,7 +52,17 @@ class AdminDashboard extends StatelessWidget {
             ),
             MenuTile(
               icon: Icons.shopping_cart,
-              label: "Pedidos",
+              label: "Painel Pedidos",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const PainelPedidosScreen()),
+                );
+              },
+            ),
+            MenuTile(
+              icon: Icons.shopping_cart,
+              label: "Fazer Pedidos",
               onTap: () {
                 Navigator.push(
                   context,
