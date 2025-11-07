@@ -247,7 +247,7 @@ class _ClientesScreenState extends State<ClientesScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepOrange, // 🍕 mesma cor da tela de pizzas
         onPressed: () => adicionarOuEditarCliente(),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
