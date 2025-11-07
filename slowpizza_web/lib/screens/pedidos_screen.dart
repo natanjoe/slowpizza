@@ -20,7 +20,6 @@ class _PedidosScreenState extends State<PedidosScreen> {
     'cancelado',
   ];
 
-  // 🔹 Ícone por status
   IconData getStatusIcon(String status) {
     switch (status) {
       case 'recebido':
@@ -38,7 +37,6 @@ class _PedidosScreenState extends State<PedidosScreen> {
     }
   }
 
-  // 🔹 Cor por status
   Color getStatusColor(String status) {
     switch (status) {
       case 'recebido':
@@ -56,31 +54,27 @@ class _PedidosScreenState extends State<PedidosScreen> {
     }
   }
 
-  // 🔹 Stream principal de pedidos
+  // 🔹 Stream principal de pedidos (corrigido)
   Stream<QuerySnapshot> getPedidosStream() {
     final collection = FirebaseFirestore.instance.collection('pedidos');
+
     if (filtroStatus == 'todos') {
       return collection.orderBy('criado_em', descending: true).snapshots();
     } else {
-      return collection
-          .where('status', isEqualTo: filtroStatus)
-          .orderBy('criado_em', descending: true)
-          .snapshots();
+      // 🔧 Remove o orderBy para evitar erro de índice e ordena depois manualmente
+      return collection.where('status', isEqualTo: filtroStatus).snapshots();
     }
   }
 
-  // 🔹 Atualiza o status do pedido
   Future<void> atualizarStatus(String pedidoId, String novoStatus) async {
     await FirebaseFirestore.instance
         .collection('pedidos')
         .doc(pedidoId)
         .update({'status': novoStatus.toLowerCase()});
 
-  // 🔄 Força a atualização da tela
-        setState(() {});
+    setState(() {});
   }
 
-  // 🔹 Obtém contagem de pedidos por status
   Future<Map<String, int>> contarPedidosPorStatus() async {
     final snapshot =
         await FirebaseFirestore.instance.collection('pedidos').get();
@@ -112,7 +106,6 @@ class _PedidosScreenState extends State<PedidosScreen> {
       ),
       body: Column(
         children: [
-          // 🔸 Painel resumo superior
           FutureBuilder<Map<String, int>>(
             future: contarPedidosPorStatus(),
             builder: (context, snapshot) {
@@ -129,7 +122,8 @@ class _PedidosScreenState extends State<PedidosScreen> {
                 height: 110,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
                   children: [
                     for (var status in counts.keys)
                       Padding(
@@ -175,7 +169,6 @@ class _PedidosScreenState extends State<PedidosScreen> {
             },
           ),
 
-          // 🔸 Filtro de status
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField<String>(
@@ -198,7 +191,6 @@ class _PedidosScreenState extends State<PedidosScreen> {
             ),
           ),
 
-          // 🔸 Lista de pedidos
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: getPedidosStream(),
@@ -211,7 +203,20 @@ class _PedidosScreenState extends State<PedidosScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                final pedidos = snapshot.data!.docs;
+                // 🔧 Ordenação manual quando o filtro é aplicado
+                List<QueryDocumentSnapshot> pedidos =
+                    snapshot.data!.docs.toList();
+                if (filtroStatus != 'todos') {
+                  pedidos.sort((a, b) {
+                    final aData = a.data() as Map<String, dynamic>;
+                    final bData = b.data() as Map<String, dynamic>;
+                    final aTs = aData['criado_em'] as Timestamp?;
+                    final bTs = bData['criado_em'] as Timestamp?;
+                    if (aTs == null || bTs == null) return 0;
+                    return bTs.compareTo(aTs); // mais recentes primeiro
+                  });
+                }
+
                 if (pedidos.isEmpty) {
                   return const Center(
                       child: Text("Nenhum pedido encontrado"));
@@ -272,7 +277,6 @@ class _PedidosScreenState extends State<PedidosScreen> {
                           ],
                         ),
                         children: [
-                          // 🔹 Lista de itens
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
