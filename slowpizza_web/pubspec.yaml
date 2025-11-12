@@ -11,6 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Localizações (traduções e suporte a múltiplos idiomas)
+  flutter_localizations:
+    sdk: flutter
+
   # Firebase (todos compatíveis com Flutter 3.8.x)
   firebase_core: ^3.1.1
   firebase_auth: ^5.1.1
@@ -18,13 +22,14 @@ dependencies:
   cloud_functions: ^5.0.1
   firebase_storage: ^12.4.10
 
-
   # Web-friendly image picker
   file_picker: ^5.0.1
 
-
   # Ícones padrão do iOS
   cupertino_icons: ^1.0.8
+
+  # Internacionalização
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -33,3 +38,4 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
