@@ -13,8 +13,13 @@ class AdminDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Define número de colunas adaptativo
-    int crossAxisCount = MediaQuery.of(context).size.width > 600 ? 2 : 1;
+    final width = MediaQuery.of(context).size.width;
+
+    // Número de colunas se ajusta ao tamanho da tela
+    final crossAxisCount = width > 600 ? 2 : 1;
+
+    // Ajusta a proporção para evitar tiles muito altos em telas pequenas
+    final childAspectRatio = width > 600 ? 1.2 : 2.8;
 
     return Scaffold(
       appBar: AppBar(
@@ -24,83 +29,77 @@ class AdminDashboard extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              // Aqui você coloca a lógica de logout
-              Navigator.pop(context); // exemplo simples
+              Navigator.pop(context);
             },
           ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: GridView(
+
+        // 🔥 IMPORTANTE: Usa GridView.builder para garantir scroll correto
+        child: GridView.builder(
+          itemCount: 6,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
-            childAspectRatio: 1.2,
+            childAspectRatio: childAspectRatio,
           ),
-          children: [
-            MenuTile(
-              icon: Icons.local_pizza,
-              label: "Pizzas",
-              onTap: () {
-                Navigator.push(
+          itemBuilder: (context, index) {
+            final items = [
+              MenuTile(
+                icon: Icons.local_pizza,
+                label: "Pizzas",
+                onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const PizzasScreen()),
-                );
-              },
-            ),
-            MenuTile(
-              icon: Icons.shopping_cart,
-              label: "Painel Pedidos",
-              onTap: () {
-                Navigator.push(
+                ),
+              ),
+              MenuTile(
+                icon: Icons.shopping_cart,
+                label: "Painel Pedidos",
+                onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const PainelPedidosScreen()),
-                );
-              },
-            ),
-            MenuTile(
-              icon: Icons.shopping_cart,
-              label: "Fazer Pedidos",
-              onTap: () {
-                Navigator.push(
+                ),
+              ),
+              MenuTile(
+                icon: Icons.shopping_cart,
+                label: "Fazer Pedidos",
+                onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const PedidosScreen()),
-                );
-              },
-            ),
-            MenuTile(
-              icon: Icons.people,
-              label: "Clientes",
-              onTap: () {
-                Navigator.push(
+                ),
+              ),
+              MenuTile(
+                icon: Icons.people,
+                label: "Clientes",
+                onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const ClientesScreen()),
-                );
-              },
-            ),
-            MenuTile(
-              icon: Icons.attach_money,
-              label: "Financeiro",
-              onTap: () {
-                Navigator.push(
+                ),
+              ),
+              MenuTile(
+                icon: Icons.attach_money,
+                label: "Financeiro",
+                onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const FinanceiroScreen()),
-                );
-              },
-            ),
-            MenuTile(
-              icon: Icons.attach_money,
-              label: "Mesas",
-              onTap: () {
-                Navigator.push(
+                ),
+              ),
+              MenuTile(
+                icon: Icons.table_restaurant,
+                label: "Mesas",
+                onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const MesasScreen()),
-                );
-              },
-            ),
-          ],
+                ),
+              ),
+            ];
+
+            return items[index];
+          },
         ),
       ),
     );
