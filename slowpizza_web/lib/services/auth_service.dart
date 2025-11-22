@@ -12,6 +12,10 @@ class AuthService {
 
       User? user = userCredential.user;
 
+      // 🔥 ADICIONE ISSO AQUI
+      final token = await user!.getIdTokenResult(true);
+      print("CLAIMS ATUAIS: ${token.claims}");
+
       // Verifica claims do admin
       IdTokenResult tokenResult = await user!.getIdTokenResult();
       if (tokenResult.claims != null && tokenResult.claims!['role'] == 'admin') {

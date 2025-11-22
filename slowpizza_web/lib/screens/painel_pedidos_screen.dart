@@ -18,6 +18,7 @@ class _PainelPedidosScreenState extends State<PainelPedidosScreen> {
     'pronto',
     'retirado',
     'cancelado',
+    'pago',  // <-- ADICIONADO
   ];
 
   IconData getStatusIcon(String status) {
@@ -84,6 +85,7 @@ class _PainelPedidosScreenState extends State<PainelPedidosScreen> {
       'pronto': 0,
       'retirado': 0,
       'cancelado': 0,
+      'pago': 0, // <-- ADICIONADO
     };
 
     for (var doc in snapshot.docs) {

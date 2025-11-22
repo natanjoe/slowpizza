@@ -7,6 +7,8 @@ import '../screens/painel_pedidos_screen.dart';
 import '../screens/pedidos_screen.dart';
 import '../screens/clientes_screen.dart';
 import '../screens/financeiro_screen.dart';
+import '../screens/caixa_screen.dart';
+
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -39,7 +41,7 @@ class AdminDashboard extends StatelessWidget {
 
         // 🔥 IMPORTANTE: Usa GridView.builder para garantir scroll correto
         child: GridView.builder(
-          itemCount: 6,
+          itemCount: 7,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: 16,
@@ -86,6 +88,14 @@ class AdminDashboard extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const FinanceiroScreen()),
+                ),
+              ),
+              MenuTile(
+                icon: Icons.point_of_sale,
+                label: "Caixa",
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const CaixaScreen()),
                 ),
               ),
               MenuTile(

@@ -4,12 +4,18 @@ import 'firebase_options.dart';
 import 'screens/login_screen.dart';
 import 'theme/theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
+  // FORÇA A REGIÃO CORRETA (us-central1) – forma atualizada 2025
+  FirebaseFunctions.instanceFor(region: 'us-central1');
+
   runApp(const MyApp());
 }
 
